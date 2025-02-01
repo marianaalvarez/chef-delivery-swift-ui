@@ -14,17 +14,20 @@ struct HomeView: View {
         GeometryReader { geometry in
             Circle()
                 .foregroundStyle(Color("ColorRed"))
-                .frame(width: 200)
+                .frame(width: isAnimating ? 200 : 0)
                 .blur(radius: 60)
-                .position(CGPoint(x: 50, y: 100))
-                .opacity(0.5)
+                .position(x: isAnimating ? 50 : -50, y: isAnimating ? 100 : -100)
+                .opacity(isAnimating ? 0.5 : 0)
             
             Circle()
                 .foregroundStyle(Color("ColorRedDark"))
-                .frame(width: 200)
+                .frame(width: isAnimating ? 200 : 0)
                 .blur(radius: 60)
-                .position(CGPoint(x: geometry.size.width - 50, y: geometry.size.height - 50))
-                .opacity(0.5)
+                .position(
+                    x: isAnimating ? geometry.size.width - 50 : geometry.size.width + 50,
+                    y: isAnimating ? geometry.size.height - 50 : geometry.size.height + 50
+                )
+                .opacity(isAnimating ? 0.5 : 0)
             
             VStack {
                 Text("Chef Delivery")
