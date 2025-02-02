@@ -11,6 +11,7 @@ struct HomeView: View {
     @State var isAnimating = false
     @State private var imageOffset: CGSize = .zero
     @State private var buttonOffset: CGFloat = .zero
+    @State private var showNextScreen = false
     private let buttonHeight: CGFloat = 80
     
     var body: some View {
@@ -41,7 +42,7 @@ struct HomeView: View {
                         .opacity(isAnimating ? 1 : 0)
                         .offset(y: isAnimating ? 0 : -40)
                 
-                    Text("Peça as suas comidas favoritas no conforto da     sua casa.")
+                    Text("Peça as suas comidas favoritas no conforto da sua casa.")
                         .font(.title2)
                         .padding()
                         .multilineTextAlignment(.center)
@@ -123,18 +124,22 @@ struct HomeView: View {
                                             buttonOffset = .zero
                                         }
                                     } else {
-                                        // Navigate to next screen
+                                        showNextScreen = true
                                     }
                                 })
                         )
                     }
                     .frame(width: geometry.size.width - 60, height: buttonHeight)
+                    .opacity(isAnimating ? 1 : 0)
+                    .offset(y: isAnimating ? 0 : 100)
                 }
                 .onAppear {
                     withAnimation(.easeInOut(duration: 1.5)) {
                         isAnimating = true
                     }
                 }
+            }.fullScreenCover(isPresented: $showNextScreen) {
+                ContentView()
             }
         }
     }
