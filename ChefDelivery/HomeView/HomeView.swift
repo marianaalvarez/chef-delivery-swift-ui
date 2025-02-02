@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @State var isAnimating = false
     @State private var imageOffset: CGSize = .zero
+    @State private var buttonOffset: CGFloat = .zero
     private let buttonHeight: CGFloat = 80
     
     var body: some View {
@@ -67,9 +68,11 @@ struct HomeView: View {
                     ZStack {
                         Capsule()
                             .fill(Color("ColorRed").opacity(0.2))
+                        
                         Capsule()
                             .fill(Color("ColorRed").opacity(0.2))
                             .padding(8)
+                        
                         Text("Descubra mais")
                             .font(.title2)
                             .bold()
@@ -91,6 +94,20 @@ struct HomeView: View {
                             }
                             Spacer()
                         }
+                        .offset(x: buttonOffset)
+                        .gesture(
+                            DragGesture()
+                                .onChanged({ gesture in
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        buttonOffset = gesture.translation.width
+                                    }
+                                })
+                                .onEnded({ _ in
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        buttonOffset = .zero
+                                    }
+                                })
+                        )
                     }
                     .frame(width: geometry.size.width - 60, height: buttonHeight)
                 }
