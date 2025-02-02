@@ -78,6 +78,14 @@ struct HomeView: View {
                             .bold()
                             .foregroundColor(Color("ColorRedDark"))
                             .offset(x: 20)
+                        
+                        HStack {
+                            Capsule()
+                                .fill(Color("ColorRed"))
+                                .frame(width: buttonOffset + buttonHeight)
+                            
+                            Spacer()
+                        }
 
                         HStack {
                             ZStack {
@@ -104,13 +112,18 @@ struct HomeView: View {
                                     
                                     if gestureWidth >= 0 && gestureWidth <= dragAreaWidth {
                                         withAnimation(.easeInOut(duration: 0.25)) {
-                                            buttonOffset = gesture.translation.width
+                                            buttonOffset = gestureWidth
                                         }
                                     }
                                 })
                                 .onEnded({ _ in
-                                    withAnimation(.easeInOut(duration: 0.25)) {
-                                        buttonOffset = .zero
+                                    let buttonWidth = geometry.size.width - 60
+                                    if buttonOffset <= buttonWidth / 2 {
+                                        withAnimation(.easeInOut(duration: 0.25)) {
+                                            buttonOffset = .zero
+                                        }
+                                    } else {
+                                        // Navigate to next screen
                                     }
                                 })
                         )
