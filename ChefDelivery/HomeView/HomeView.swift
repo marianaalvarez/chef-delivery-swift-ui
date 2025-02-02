@@ -98,8 +98,14 @@ struct HomeView: View {
                         .gesture(
                             DragGesture()
                                 .onChanged({ gesture in
-                                    withAnimation(.easeInOut(duration: 0.25)) {
-                                        buttonOffset = gesture.translation.width
+                                    let gestureWidth = gesture.translation.width
+                                    let buttonWidth = geometry.size.width - 60
+                                    let dragAreaWidth = buttonWidth - buttonHeight
+                                    
+                                    if gestureWidth >= 0 && gestureWidth <= dragAreaWidth {
+                                        withAnimation(.easeInOut(duration: 0.25)) {
+                                            buttonOffset = gesture.translation.width
+                                        }
                                     }
                                 })
                                 .onEnded({ _ in
