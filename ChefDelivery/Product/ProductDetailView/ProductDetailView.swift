@@ -8,22 +8,28 @@
 import SwiftUI
 
 struct ProductDetailView: View {
+    @Environment(\.presentationMode) var presentationMode
     @State var productQuantity: Int = 1
+    @State private var showAlert = false
+    private let service: HomeService = HomeService()
     let product: ProductType
-    let service: HomeService = HomeService()
-    
+
     var body: some View {
         VStack {
             ProductDetailHeaderView(product: product)
             Spacer()
             ProductDetailQuantityView(productQuantity: $productQuantity)
-//            Text("\(productQuantity)")
             Spacer()
             CartButtonView {
                 Task {
                     await confirmOrder()
                 }
             }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Chef Delivery"), message: Text("Pedido enviado com sucesso"), dismissButton: .default(Text("Ok"), action: {
+                presentationMode.wrappedValue.dismiss()
+            }))
         }
     }
     
@@ -32,12 +38,14 @@ struct ProductDetailView: View {
             let result = try await service.confirmOrder(product: product)
             switch result {
             case .success(let message):
-                print(message)
+                showAlert = true
             case .failure(let error):
                 print(error.localizedDescription)
+                showAlert = false
             }
         } catch {
             print(error.localizedDescription)
+            showAlert = false
         }
     }
 }
