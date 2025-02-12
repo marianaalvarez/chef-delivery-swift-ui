@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @State private var isLoading = true
+    @State private var storesType: [StoreType] = []
     private var service = HomeService()
     
     // MARK: - View
@@ -16,21 +18,43 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                NavigationBar()
-                    .padding(.horizontal, 15)
-                    .padding(.top, 15)
-                
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 20) {
-                        OrderTypeGridView()
-                        CarouselTabView()
-                        StoresContainerView()
+                if isLoading {
+                    ProgressView()
+                } else {
+                    NavigationBar()
+                        .padding(.horizontal, 15)
+                        .padding(.top, 15)
+                    
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(spacing: 20) {
+                            OrderTypeGridView()
+                            CarouselTabView()
+                            StoresContainerView(stores: storesType)
+                        }
                     }
                 }
             }
         }
         .onAppear {
-            service.fetchData()
+            Task {
+                await getStores()
+            }
+        }
+    }
+    
+    func getStores() async {
+        do {
+            let result = try await service.fetchData()
+            switch result {
+            case .success(let stores):
+                storesType = stores
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            isLoading = false
+        } catch {
+            print(error.localizedDescription)
+            isLoading = false
         }
     }
 }
