@@ -22,6 +22,5 @@ struct CarouselItemView: View {
     CarouselItemView(orderType: OrderType(id: 1,
                                           name: "",
                                           image: "barbecue-banner"))
-    .previewLayout(.sizeThatFits)
     .padding()
 }

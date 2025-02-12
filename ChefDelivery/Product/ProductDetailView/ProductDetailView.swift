@@ -16,9 +16,11 @@ struct ProductDetailView: View {
             ProductDetailHeaderView(product: product)
             Spacer()
             ProductDetailQuantityView(productQuantity: $productQuantity)
-            Text("\(productQuantity)")
+//            Text("\(productQuantity)")
             Spacer()
-            CartButtonView()
+            CartButtonView {
+                print("Selecionou \(product)")
+            }
         }
     }
 }
@@ -29,13 +31,15 @@ struct ProductDetailView: View {
 }
 
 struct CartButtonView: View {
+    var onButtonPress: () -> Void
+    
     var body: some View {
         Button {
-            print("Button pressed")
+            onButtonPress()
         } label: {
             HStack {
                 Image(systemName: "cart")
-                Text("Adicionar ao carrinho")
+                Text("Enviar pedido")
             }
             .padding(.horizontal, 32)
             .padding(.vertical, 16)
